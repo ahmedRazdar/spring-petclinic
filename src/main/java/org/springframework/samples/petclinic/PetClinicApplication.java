@@ -32,7 +32,8 @@ public class PetClinicApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PetClinicApplication.class, args);
 
-		System.out.print
+		//application start sttement
+		System.out.println("PetClinicApplication started");
 	}
 
 }
