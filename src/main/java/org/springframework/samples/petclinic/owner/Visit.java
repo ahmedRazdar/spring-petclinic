@@ -36,9 +36,10 @@ import org.jspecify.annotations.Nullable;
 @Table(name = "visits")
 public class Visit extends BaseEntity {
 
-	@Column(name = "visit_date")
+	@Column(name = "visitDate")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private @Nullable LocalDate date;
+	@Nullable
+	private LocalDate date;
 
 	@NotBlank
 	private @Nullable String description;
@@ -46,22 +47,40 @@ public class Visit extends BaseEntity {
 	/**
 	 * Creates a new instance of Visit for the current date
 	 */
+	/*@
+     ensures date != null;
+     ensures description == null;
+     @*/
 	public Visit() {
 		this.date = LocalDate.now();
 	}
 
+	/*@
+	ensures \result == date;
+  	@*/
 	public @Nullable LocalDate getDate() {
 		return this.date;
 	}
 
+	/*@
+	 requires newDate != null;
+	 ensures date == newDate;
+   	@*/
 	public void setDate(@Nullable LocalDate date) {
 		this.date = date;
 	}
 
+	/*@
+  	ensures \result == description;
+	@*/
 	public @Nullable String getDescription() {
 		return this.description;
 	}
 
+	/*@
+      requires desc != null && desc.length() > 0;
+      ensures description == desc;
+    @*/
 	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}
