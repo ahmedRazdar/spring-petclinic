@@ -50,6 +50,8 @@ services:
       retries: 5
 
   # PostgreSQL Database (alternative)
+  # Note: Profile removed to allow Spring Boot Docker Compose support in tests
+  # To start manually: docker compose up postgres
   postgres:
     image: postgres:18.0
     container_name: petclinic-postgres
@@ -69,8 +71,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    profiles:
-      - postgres
 
 volumes:
   mysql-data:
