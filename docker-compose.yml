@@ -67,10 +67,11 @@ services:
       - petclinic-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U petclinic"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U petclinic -d petclinic"]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
 
 volumes:
   mysql-data:
