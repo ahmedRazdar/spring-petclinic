@@ -1,21 +1,81 @@
 services:
+  # Spring PetClinic Application
+  petclinic:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    image: spring-petclinic:latest
+    container_name: petclinic-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=mysql
+      - MYSQL_URL=jdbc:mysql://mysql:3306/petclinic
+      - MYSQL_USER=petclinic
+      - MYSQL_PASS=petclinic
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - petclinic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # MySQL Database
   mysql:
     image: mysql:9.2
+    container_name: petclinic-mysql
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_ROOT_PASSWORD=root
       - MYSQL_USER=petclinic
       - MYSQL_PASSWORD=petclinic
       - MYSQL_DATABASE=petclinic
     volumes:
+      - mysql-data:/var/lib/mysql
       - "./conf.d:/etc/mysql/conf.d:ro"
+    networks:
+      - petclinic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL Database (alternative)
   postgres:
     image: postgres:18.0
+    container_name: petclinic-postgres
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=petclinic
       - POSTGRES_USER=petclinic
       - POSTGRES_DB=petclinic
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - petclinic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U petclinic"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - postgres
+
+volumes:
+  mysql-data:
+  postgres-data:
+
+networks:
+  petclinic-network:
+    driver: bridge
