@@ -273,6 +273,23 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.openjml</groupId>
+        <artifactId>openjml-maven-plugin</artifactId>
+        <version>0.8.0</version>
+        <executions>
+          <execution>
+            <id>openjml-check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <esc>true</esc>
+        </configuration>
+      </plugin>
 
       <!-- Spring Boot Actuator displays build-related information if a git.properties file is
       present at the classpath -->
