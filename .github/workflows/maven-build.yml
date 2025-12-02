@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java CI with Maven + Docker Upload
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Verify Docker and Docker Compose
+      - name: Verify Docker
         run: |
           docker --version
           docker compose version
@@ -37,3 +37,21 @@ jobs:
 
       - name: Build with Maven Wrapper
         run: ./mvnw -B verify
+
+      # ---- 🐳 Docker build & push stage ----
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build Docker Image
+        run: |
+          docker buildx build \
+          --tag ${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest \
+          --load .
+
+      - name: Push Docker Image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/your-image-name:latest
