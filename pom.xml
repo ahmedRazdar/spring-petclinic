@@ -273,6 +273,8 @@
           </execution>
         </executions>
       </plugin>
+      <!-- OpenJML plugin commented out - plugin not available in Maven Central -->
+      <!--
       <plugin>
         <groupId>org.openjml</groupId>
         <artifactId>openjml-maven-plugin</artifactId>
@@ -290,6 +292,7 @@
           <esc>true</esc>
         </configuration>
       </plugin>
+      -->
 
       <!-- Spring Boot Actuator displays build-related information if a git.properties file is
       present at the classpath -->
