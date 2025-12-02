@@ -14,15 +14,10 @@ COPY src ./src
 # Apply formatting
 RUN mvn spring-javaformat:apply -B
 
-# Build using standard javac (bypass ErrorProne completely)
-# Create a temporary pom.xml without ErrorProne configuration
-RUN mvn clean package -DskipTests -B \
-    -Dmaven.compiler.fork=true \
-    -Dmaven.compiler.executable=/usr/bin/javac \
-    -Dmaven.compiler.compilerArgs="-XDcompilePolicy=simple" || \
-    (echo "First attempt failed, trying alternative..." && \
-     mvn clean compile -B -Dmaven.compiler.fork=true -Dmaven.compiler.executable=/usr/bin/javac && \
-     mvn jar:jar spring-boot:repackage -DskipTests -B)
+# Build using standard compiler (bypass ErrorProne)
+# Use compiler:compile goal directly to skip ErrorProne plugin
+RUN mvn clean resources:resources compiler:compile -B && \
+    mvn jar:jar spring-boot:repackage -DskipTests -B
 
 # Stage 2: Run the application
 FROM eclipse-temurin:17-jre-alpine
