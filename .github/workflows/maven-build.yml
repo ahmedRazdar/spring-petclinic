@@ -41,22 +41,26 @@ jobs:
       - name: Build with Maven Wrapper
         run: ./mvnw -B verify
 
-      - name: Log in to GitHub Container Registry
+      - name: Set Docker Hub image name
+        if: github.event_name != 'pull_request'
+        id: dockerhub
+        run: echo "image=${{ secrets.DOCKERHUB_USERNAME }}/spring-petclinic" >> $GITHUB_OUTPUT
+
+      - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata for Docker
         id: meta
+        if: github.event_name != 'pull_request'
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ${{ steps.dockerhub.outputs.image }}
           tags: |
             type=ref,event=branch
-            type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix={{branch}}-
@@ -69,11 +73,11 @@ jobs:
           context: .
           file: ./Dockerfile
           push: false
-          tags: ghcr.io/${{ github.repository }}:pr-${{ github.event.pull_request.number }}
+          tags: spring-petclinic:pr-${{ github.event.pull_request.number }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/build-push-action@v5
         with:
