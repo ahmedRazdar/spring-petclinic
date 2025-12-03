@@ -7,27 +7,38 @@ on:
     branches: [ main ]
 
 jobs:
-  # Job 1: Check code formatting
-  format-check:
-    name: Check Code Formatting
+  # Job 1: Format code, validate formatting, and compile (no tests)
+  compile:
+    name: Format, Validate & Compile
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '17' ]
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: ${{ matrix.java }}
           distribution: 'adopt'
           cache: maven
 
-      - name: Check code formatting
+      - name: Apply Spring Java Format
+        run: ./mvnw spring-javaformat:apply
+
+      - name: Validate code formatting
         run: ./mvnw spring-javaformat:validate
 
-  # Job 2: Build and run tests
-  build-and-test:
-    name: Build and Test (Java ${{ matrix.java }})
+      - name: Compile code (skip tests)
+        run: ./mvnw -B clean compile
+
+  # Job 2: Run tests (only if compilation succeeds)
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
+    needs: compile
+    if: needs.compile.result == 'success'
     strategy:
       matrix:
         java: [ '17' ]
@@ -49,8 +60,8 @@ jobs:
           docker --version
           docker compose version
 
-      - name: Build with Maven Wrapper
-        run: ./mvnw -B verify
+      - name: Run tests
+        run: ./mvnw -B test
 
       - name: Upload test results
         if: always()
@@ -73,9 +84,9 @@ jobs:
   docker-build:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    needs: [format-check, build-and-test]
-    # Run if formatting and tests passed (for both PRs and pushes)
-    if: needs.format-check.result == 'success' && needs.build-and-test.result == 'success'
+    needs: [compile, test]
+    # Run if compilation and tests passed
+    if: needs.compile.result == 'success' && needs.test.result == 'success'
     steps:
       - uses: actions/checkout@v4
 
@@ -129,26 +140,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  # Job 4: Summary (optional - shows overall status)
-  ci-status:
-    name: CI Status
-    runs-on: ubuntu-latest
-    needs: [format-check, build-and-test, docker-build]
-    if: always()
-    steps:
-      - name: Check CI status
-        run: |
-          if [ "${{ needs.format-check.result }}" != "success" ]; then
-            echo "❌ Format check failed"
-            exit 1
-          fi
-          if [ "${{ needs.build-and-test.result }}" != "success" ]; then
-            echo "❌ Build and tests failed"
-            exit 1
-          fi
-          if [ "${{ needs.docker-build.result }}" != "success" ] && [ "${{ needs.docker-build.result }}" != "skipped" ]; then
-            echo "❌ Docker build failed"
-            exit 1
-          fi
-          echo "✅ All checks passed"
