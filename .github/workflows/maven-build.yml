@@ -15,7 +15,8 @@ jobs:
       matrix:
         java: [ '17' ]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
@@ -31,7 +32,7 @@ jobs:
         run: ./mvnw spring-javaformat:validate
 
       - name: Compile code (skip tests)
-        run: ./mvnw -B clean compile
+        run: ./mvnw -B clean compile -DskipTests
 
   # Job 2: Run tests (only if compilation succeeds)
   test:
@@ -43,7 +44,8 @@ jobs:
       matrix:
         java: [ '17' ]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
@@ -60,7 +62,11 @@ jobs:
           docker --version
           docker compose version
 
+      - name: Apply Spring Java Format
+        run: ./mvnw spring-javaformat:apply
+
       - name: Run tests
+        # Formatting is applied above, so validation will pass
         run: ./mvnw -B test
 
       - name: Upload test results
@@ -72,6 +78,7 @@ jobs:
             target/surefire-reports/
             target/site/jacoco/
           retention-days: 7
+          if-no-files-found: ignore
 
       - name: Upload coverage reports
         if: always()
@@ -79,6 +86,7 @@ jobs:
         with:
           files: target/site/jacoco/jacoco.xml
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   # Job 3: Build Docker image (only if tests pass)
   docker-build:
@@ -88,7 +96,8 @@ jobs:
     # Run if compilation and tests passed
     if: needs.compile.result == 'success' && needs.test.result == 'success'
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
