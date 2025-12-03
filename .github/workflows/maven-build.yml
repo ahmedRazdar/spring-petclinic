@@ -82,6 +82,20 @@ jobs:
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Run mutation tests (PITest)
+        if: always()
+        run: ./mvnw org.pitest:pitest-maven:mutationCoverage -DskipTests=false
+        continue-on-error: true
+
+      - name: Upload mutation test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-test-reports
+          path: target/pit-reports/
+          retention-days: 7
+          if-no-files-found: ignore
+
   # Job 3: Build Docker image (only if tests pass)
   docker-build:
     name: Build Docker Image
