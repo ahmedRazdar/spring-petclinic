@@ -9,7 +9,7 @@ on:
 jobs:
   # Job 1: Format code, validate formatting, and compile (no tests)
   compile:
-    name: Format, Validate & Compile
+    name: Format validation & compile
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -36,7 +36,7 @@ jobs:
 
   # Job 2: Run tests (only if compilation succeeds)
   test:
-    name: Run Tests
+    name: Test & Coverage
     runs-on: ubuntu-latest
     needs: compile
     if: needs.compile.result == 'success'
