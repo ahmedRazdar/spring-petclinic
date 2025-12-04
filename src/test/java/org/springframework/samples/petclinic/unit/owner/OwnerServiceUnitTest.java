@@ -140,9 +140,12 @@ class OwnerServiceUnitTest {
 	@Test
 	@DisplayName("Should not save when owner is null")
 	void shouldNotSaveWhenOwnerIsNull() {
+		// Given
+		given(ownerRepository.save(null)).willThrow(new IllegalArgumentException("Owner must not be null"));
+
 		// When/Then
 		assertThatThrownBy(() -> ownerRepository.save(null))
-			.isInstanceOf(Exception.class);
+			.isInstanceOf(IllegalArgumentException.class);
 		verify(ownerRepository, never()).save(any(Owner.class));
 	}
 

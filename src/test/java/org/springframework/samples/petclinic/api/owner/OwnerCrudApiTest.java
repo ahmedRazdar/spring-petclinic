@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
@@ -95,7 +96,7 @@ class OwnerCrudApiTest {
 			.andExpect(redirectedUrlPattern("/owners/*"));
 
 		// Verify in database
-		Optional<Owner> saved = ownerRepository.findByLastNameStartingWith("Smith", null)
+		Optional<Owner> saved = ownerRepository.findByLastNameStartingWith("Smith", Pageable.unpaged())
 			.stream()
 			.findFirst();
 		assertThat(saved).isPresent();
