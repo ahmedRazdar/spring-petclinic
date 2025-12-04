@@ -39,6 +39,8 @@
     <nohttp-checkstyle.version>0.0.11</nohttp-checkstyle.version>
     <nullaway.version>0.12.10</nullaway.version>
     <spring-format.version>0.0.47</spring-format.version>
+    <!-- Control whether PIT mutation tests run; can be overridden with -DskipPitests=true -->
+    <skipPitests>false</skipPitests>
   </properties>
 
   <dependencies>
@@ -121,6 +123,14 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- PIT plugin for JUnit 5 so mutation tests can discover and run JUnit Jupiter tests -->
+    <dependency>
+      <groupId>org.pitest</groupId>
+      <artifactId>pitest-junit5-plugin</artifactId>
+      <version>1.2.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -312,6 +322,8 @@
         <artifactId>pitest-maven</artifactId>
         <version>1.15.0</version>
         <configuration>
+          <!-- Allow PIT to be skipped via -DskipPitests=true -->
+          <skip>${skipPitests}</skip>
           <targetClasses>
             <param>org.springframework.samples.petclinic.*</param>
           </targetClasses>
