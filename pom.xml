@@ -41,6 +41,8 @@
     <spring-format.version>0.0.47</spring-format.version>
     <!-- Control whether PIT mutation tests run; can be overridden with -DskipPitests=true -->
     <skipPitests>false</skipPitests>
+    <!-- Control whether JML verification runs; can be overridden with -DskipJmlVerification=true -->
+    <skipJmlVerification>false</skipJmlVerification>
   </properties>
 
   <dependencies>
@@ -386,26 +388,29 @@
           </execution>
         </executions>
       </plugin>
-      <!-- OpenJML plugin commented out - plugin not available in Maven Central -->
-      <!--
+      <!-- OpenJML verification via exec plugin (OpenJML not in Maven Central) -->
       <plugin>
-        <groupId>org.openjml</groupId>
-        <artifactId>openjml-maven-plugin</artifactId>
-        <version>0.8.0</version>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.1</version>
+        <configuration>
+          <skip>${skipJmlVerification}</skip>
+        </configuration>
         <executions>
           <execution>
-            <id>openjml-check</id>
-            <goals>
-              <goal>check</goal>
-            </goals>
+            <id>verify-jml</id>
             <phase>verify</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>${project.basedir}/scripts/verify-jml.sh</executable>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <skip>${skipJmlVerification}</skip>
+            </configuration>
           </execution>
         </executions>
-        <configuration>
-          <esc>true</esc>
-        </configuration>
       </plugin>
-      -->
 
       <!-- Spring Boot Actuator displays build-related information if a git.properties file is
       present at the classpath -->

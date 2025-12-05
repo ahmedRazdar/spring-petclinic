@@ -33,6 +33,15 @@ public class PetValidator implements Validator {
 
 	private static final String REQUIRED = "required";
 
+	/*@
+	 @ requires obj != null;
+	 @ requires errors != null;
+	 @ requires obj instanceof Pet;
+	 @ ensures errors.hasErrors() ==> 
+	 @   (pet.getName() == null || pet.getName().trim().isEmpty() || 
+	 @    (pet.isNew() && pet.getType() == null) || 
+	 @    pet.getBirthDate() == null);
+	 @*/
 	@Override
 	public void validate(Object obj, Errors errors) {
 		Pet pet = (Pet) obj;
@@ -56,6 +65,10 @@ public class PetValidator implements Validator {
 	/**
 	 * This Validator validates *just* Pet instances
 	 */
+	/*@
+	 @ requires clazz != null;
+	 @ ensures \result == Pet.class.isAssignableFrom(clazz);
+	 @*/
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return Pet.class.isAssignableFrom(clazz);
