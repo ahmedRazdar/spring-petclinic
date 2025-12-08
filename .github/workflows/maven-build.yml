@@ -152,12 +152,12 @@ jobs:
           sarif_file: 'trivy-results.sarif'
         continue-on-error: true
 
-  # Job 4: Build Docker image (only if tests pass)
+  # Job 4: Build Docker image (only if tests and security scans pass)
   docker-build:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    needs: [compile, test]
-    # Run if compilation and tests passed
+    needs: [compile, test, security-scan]
+    # Run if compilation, tests, and security scans completed successfully
     if: needs.compile.result == 'success' && needs.test.result == 'success'
     steps:
       - name: Checkout code
