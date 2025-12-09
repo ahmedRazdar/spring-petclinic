@@ -1,8 +1,8 @@
 /*
- * Integration Test for OwnerService Benchmarks
+ * Integration Test for Owner Repository Benchmarks
  *
  * This test runs the JMH benchmarks in a Spring Boot integration test context.
- * It provides database-backed performance measurements for OwnerService operations.
+ * It provides database-backed performance measurements for Owner repository operations.
  */
 
 package org.springframework.samples.petclinic.performance.integration;
@@ -18,22 +18,22 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class OwnerServiceBenchmarkIT {
+public class OwnerRepositoryBenchmarkIT {
 
     @Test
-    public void runOwnerServiceBenchmarks() throws RunnerException {
-        System.out.println("🚀 Running OwnerService Integration Benchmarks");
-        System.out.println("==============================================");
+    public void runOwnerRepositoryBenchmarks() throws RunnerException {
+        System.out.println("🚀 Running Owner Repository Integration Benchmarks");
+        System.out.println("==================================================");
 
         Options opt = new OptionsBuilder()
-                .include(OwnerServiceBenchmark.class.getSimpleName())
-                .result("target/jmh-owner-service-results.json")
+                .include(OwnerRepositoryBenchmark.class.getSimpleName())
+                .result("target/jmh-owner-repository-results.json")
                 .resultFormat(ResultFormatType.JSON)
                 .build();
 
         new Runner(opt).run();
 
-        System.out.println("✅ OwnerService benchmarks completed!");
-        System.out.println("📊 Results saved to: target/jmh-owner-service-results.json");
+        System.out.println("✅ Owner repository benchmarks completed!");
+        System.out.println("📊 Results saved to: target/jmh-owner-repository-results.json");
     }
 }

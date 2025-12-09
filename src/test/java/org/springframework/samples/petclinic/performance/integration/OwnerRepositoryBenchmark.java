@@ -13,9 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.openjdk.jmh.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
-import org.springframework.samples.petclinic.owner.OwnerService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Integration benchmarks for OwnerService with database operations.
+ * Integration benchmarks for Owner repository operations with database interactions.
  * Measures real-world performance including Spring context and DB interactions.
+ * Tests JPA repository methods within full Spring Boot context.
  */
 @SpringBootTest
 @ActiveProfiles("test")
@@ -35,10 +36,7 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3, time = 2, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 @Transactional
-public class OwnerServiceBenchmark {
-
-    @Autowired
-    private OwnerService ownerService;
+public class OwnerRepositoryBenchmark {
 
     @Autowired
     private OwnerRepository ownerRepository;
@@ -78,22 +76,22 @@ public class OwnerServiceBenchmark {
     }
 
     @Benchmark
-    public Owner benchmarkFindOwnerById() {
-        return ownerService.findOwner(testOwnerId);
+    public Owner benchmarkFindById() {
+        return ownerRepository.findById(testOwnerId).orElse(null);
     }
 
     @Benchmark
-    public List<Owner> benchmarkFindOwnerByLastName() {
-        return ownerService.findOwnerByLastName(testLastName + "25");
+    public List<Owner> benchmarkFindByLastNameStartingWith() {
+        return ownerRepository.findByLastNameStartingWith(testLastName + "2", org.springframework.data.domain.Pageable.unpaged()).getContent();
     }
 
     @Benchmark
-    public List<Owner> benchmarkFindAllOwners() {
-        return ownerService.findAllOwners();
+    public List<Owner> benchmarkFindAll() {
+        return (List<Owner>) ownerRepository.findAll();
     }
 
     @Benchmark
-    public Owner benchmarkSaveOwner() {
+    public Owner benchmarkSave() {
         Owner newOwner = new Owner();
         newOwner.setFirstName("NewBenchmark");
         newOwner.setLastName("NewBenchmarkLast");
@@ -101,17 +99,17 @@ public class OwnerServiceBenchmark {
         newOwner.setCity("New Benchmark City");
         newOwner.setTelephone("0987654321");
 
-        return ownerService.saveOwner(newOwner);
+        return ownerRepository.save(newOwner);
     }
 
     @Benchmark
-    public void benchmarkUpdateOwner() {
+    public void benchmarkUpdate() {
         testOwner.setCity("Updated Benchmark City");
-        ownerService.saveOwner(testOwner);
+        ownerRepository.save(testOwner);
     }
 
     @Benchmark
-    public void benchmarkDeleteOwner() {
+    public void benchmarkDelete() {
         Owner ownerToDelete = new Owner();
         ownerToDelete.setFirstName("DeleteBenchmark");
         ownerToDelete.setLastName("DeleteBenchmarkLast");
@@ -119,7 +117,7 @@ public class OwnerServiceBenchmark {
         ownerToDelete.setCity("Delete Benchmark City");
         ownerToDelete.setTelephone("1111111111");
 
-        Owner saved = ownerService.saveOwner(ownerToDelete);
-        ownerService.deleteOwner(saved.getId());
+        Owner saved = ownerRepository.save(ownerToDelete);
+        ownerRepository.deleteById(saved.getId());
     }
 }

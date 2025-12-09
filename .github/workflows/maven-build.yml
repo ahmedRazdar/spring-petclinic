@@ -121,7 +121,7 @@ jobs:
             -q
 
           echo "🔗 Running JMH Integration Benchmarks..."
-          ./mvnw test -Dtest=OwnerServiceBenchmarkIT -q
+          ./mvnw test -Dtest=OwnerRepositoryBenchmarkIT -q
 
       - name: Check benchmark results
         id: benchmark-check
