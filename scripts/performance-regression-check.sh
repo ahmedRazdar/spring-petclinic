@@ -23,15 +23,39 @@ if [ ! -f "benchmark-results.txt" ]; then
     exit 1
 fi
 
-# Function to extract benchmark score from JMH output
+# Check if results file has content
+if [ ! -s "benchmark-results.txt" ]; then
+    echo "⚠️  Benchmark results file is empty"
+    echo "JMH may have failed, but continuing with regression check..."
+fi
+
+# Function to extract benchmark score from output
 extract_score() {
     local benchmark_name="$1"
     local results_file="$2"
 
-    # Extract score using grep and sed
-    grep "$benchmark_name" "$results_file" | \
+    # Try JMH format first
+    local jmh_score=$(grep "$benchmark_name" "$results_file" | \
     sed -n 's/.*avgt *[0-9]* *\([0-9.]*\) .*/\1/p' | \
-    head -1
+    head -1)
+
+    if [ -n "$jmh_score" ]; then
+        echo "$jmh_score"
+        return
+    fi
+
+    # Try manual benchmark format (e.g., "benchmarkCount: 0.123 μs/op")
+    local manual_score=$(grep "$benchmark_name:" "$results_file" | \
+    sed -n 's/.*: *\([0-9.]*\) .*/\1/p' | \
+    head -1)
+
+    if [ -n "$manual_score" ]; then
+        echo "$manual_score"
+        return
+    fi
+
+    # Return empty if no score found
+    echo ""
 }
 
 # Parse current benchmark results
