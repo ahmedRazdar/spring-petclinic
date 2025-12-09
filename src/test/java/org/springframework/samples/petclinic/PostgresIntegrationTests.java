@@ -53,7 +53,8 @@ import org.testcontainers.DockerClientFactory;
 		"spring.docker.compose.start.arguments=--force-recreate,--renew-anon-volumes,postgres" })
 @ActiveProfiles("postgres")
 @DisabledInNativeImage
-@DisabledIfEnvironmentVariable(named = "CI", matches = "true", disabledReason = "Skipped in CI due to Docker Compose health check issues")
+@DisabledIfEnvironmentVariable(named = "CI", matches = "true",
+		disabledReason = "Skipped in CI due to Docker Compose health check issues")
 public class PostgresIntegrationTests {
 
 	@LocalServerPort

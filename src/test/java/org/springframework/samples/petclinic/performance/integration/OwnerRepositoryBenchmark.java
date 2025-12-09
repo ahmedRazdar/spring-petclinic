@@ -24,8 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Integration benchmarks for Owner repository operations with database interactions.
- * Measures real-world performance including Spring context and DB interactions.
- * Tests JPA repository methods within full Spring Boot context.
+ * Measures real-world performance including Spring context and DB interactions. Tests JPA
+ * repository methods within full Spring Boot context.
  */
 @SpringBootTest
 @ActiveProfiles("test")
@@ -38,86 +38,91 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 public class OwnerRepositoryBenchmark {
 
-    @Autowired
-    private OwnerRepository ownerRepository;
+	@Autowired
+	private OwnerRepository ownerRepository;
 
-    private Owner testOwner;
-    private Integer testOwnerId;
-    private String testLastName;
+	private Owner testOwner;
 
-    @Setup(Level.Iteration)
-    public void setup() {
-        // Clean up any existing test data
-        ownerRepository.deleteAll();
+	private Integer testOwnerId;
 
-        // Create test data
-        testLastName = "BenchmarkTest";
+	private String testLastName;
 
-        for (int i = 1; i <= 50; i++) {
-            Owner owner = new Owner();
-            owner.setFirstName("Benchmark" + i);
-            owner.setLastName(testLastName + i);
-            owner.setAddress("Benchmark Address " + i);
-            owner.setCity("Benchmark City " + i);
-            owner.setTelephone("1234567890");
+	@Setup(Level.Iteration)
+	public void setup() {
+		// Clean up any existing test data
+		ownerRepository.deleteAll();
 
-            Owner saved = ownerRepository.save(owner);
-            if (i == 25) {
-                testOwnerId = saved.getId();
-                testOwner = saved;
-            }
-        }
-    }
+		// Create test data
+		testLastName = "BenchmarkTest";
 
-    @TearDown(Level.Iteration)
-    public void tearDown() {
-        // Clean up test data
-        ownerRepository.deleteAll();
-    }
+		for (int i = 1; i <= 50; i++) {
+			Owner owner = new Owner();
+			owner.setFirstName("Benchmark" + i);
+			owner.setLastName(testLastName + i);
+			owner.setAddress("Benchmark Address " + i);
+			owner.setCity("Benchmark City " + i);
+			owner.setTelephone("1234567890");
 
-    @Benchmark
-    public Owner benchmarkFindById() {
-        return ownerRepository.findById(testOwnerId).orElse(null);
-    }
+			Owner saved = ownerRepository.save(owner);
+			if (i == 25) {
+				testOwnerId = saved.getId();
+				testOwner = saved;
+			}
+		}
+	}
 
-    @Benchmark
-    public List<Owner> benchmarkFindByLastNameStartingWith() {
-        return ownerRepository.findByLastNameStartingWith(testLastName + "2", org.springframework.data.domain.Pageable.unpaged()).getContent();
-    }
+	@TearDown(Level.Iteration)
+	public void tearDown() {
+		// Clean up test data
+		ownerRepository.deleteAll();
+	}
 
-    @Benchmark
-    public List<Owner> benchmarkFindAll() {
-        return (List<Owner>) ownerRepository.findAll();
-    }
+	@Benchmark
+	public Owner benchmarkFindById() {
+		return ownerRepository.findById(testOwnerId).orElse(null);
+	}
 
-    @Benchmark
-    public Owner benchmarkSave() {
-        Owner newOwner = new Owner();
-        newOwner.setFirstName("NewBenchmark");
-        newOwner.setLastName("NewBenchmarkLast");
-        newOwner.setAddress("New Benchmark Address");
-        newOwner.setCity("New Benchmark City");
-        newOwner.setTelephone("0987654321");
+	@Benchmark
+	public List<Owner> benchmarkFindByLastNameStartingWith() {
+		return ownerRepository
+			.findByLastNameStartingWith(testLastName + "2", org.springframework.data.domain.Pageable.unpaged())
+			.getContent();
+	}
 
-        return ownerRepository.save(newOwner);
-    }
+	@Benchmark
+	public List<Owner> benchmarkFindAll() {
+		return (List<Owner>) ownerRepository.findAll();
+	}
 
-    @Benchmark
-    public void benchmarkUpdate() {
-        testOwner.setCity("Updated Benchmark City");
-        ownerRepository.save(testOwner);
-    }
+	@Benchmark
+	public Owner benchmarkSave() {
+		Owner newOwner = new Owner();
+		newOwner.setFirstName("NewBenchmark");
+		newOwner.setLastName("NewBenchmarkLast");
+		newOwner.setAddress("New Benchmark Address");
+		newOwner.setCity("New Benchmark City");
+		newOwner.setTelephone("0987654321");
 
-    @Benchmark
-    public void benchmarkDelete() {
-        Owner ownerToDelete = new Owner();
-        ownerToDelete.setFirstName("DeleteBenchmark");
-        ownerToDelete.setLastName("DeleteBenchmarkLast");
-        ownerToDelete.setAddress("Delete Benchmark Address");
-        ownerToDelete.setCity("Delete Benchmark City");
-        ownerToDelete.setTelephone("1111111111");
+		return ownerRepository.save(newOwner);
+	}
 
-        Owner saved = ownerRepository.save(ownerToDelete);
-        ownerRepository.deleteById(saved.getId());
-    }
+	@Benchmark
+	public void benchmarkUpdate() {
+		testOwner.setCity("Updated Benchmark City");
+		ownerRepository.save(testOwner);
+	}
+
+	@Benchmark
+	public void benchmarkDelete() {
+		Owner ownerToDelete = new Owner();
+		ownerToDelete.setFirstName("DeleteBenchmark");
+		ownerToDelete.setLastName("DeleteBenchmarkLast");
+		ownerToDelete.setAddress("Delete Benchmark Address");
+		ownerToDelete.setCity("Delete Benchmark City");
+		ownerToDelete.setTelephone("1111111111");
+
+		Owner saved = ownerRepository.save(ownerToDelete);
+		ownerRepository.deleteById(saved.getId());
+	}
+
 }

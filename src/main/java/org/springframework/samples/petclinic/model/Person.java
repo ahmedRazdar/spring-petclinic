@@ -36,22 +36,22 @@ public class Person extends BaseEntity {
 	@NotBlank
 	private @Nullable String lastName;
 
-	//@ ensures \result == this.firstName;
+	// @ ensures \result == this.firstName;
 	public @Nullable String getFirstName() {
 		return this.firstName;
 	}
 
-	//@ ensures this.firstName == firstName;
+	// @ ensures this.firstName == firstName;
 	public void setFirstName(@Nullable String firstName) {
 		this.firstName = firstName;
 	}
 
-	//@ ensures \result == this.lastName;
+	// @ ensures \result == this.lastName;
 	public @Nullable String getLastName() {
 		return this.lastName;
 	}
 
-	//@ ensures this.lastName == lastName;
+	// @ ensures this.lastName == lastName;
 	public void setLastName(@Nullable String lastName) {
 		this.lastName = lastName;
 	}

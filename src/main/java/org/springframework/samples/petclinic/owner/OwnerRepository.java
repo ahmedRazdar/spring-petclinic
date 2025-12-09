@@ -42,13 +42,21 @@ public interface OwnerRepository extends JpaRepository<Owner, Integer> {
 	 * @return a Collection of matching {@link Owner}s (or an empty Collection if none
 	 * found)
 	 */
-	/*@
-	 @ requires lastName != null && !lastName.isEmpty();
-	 @ requires pageable != null;
-	 @ ensures \result != null;
-	 @ ensures (\forall Owner o; \result.getContent().contains(o); 
-	 @            o.getLastName() != null && o.getLastName().startsWith(lastName));
-	 @*/
+	/*
+	 * @
+	 *
+	 * @ requires lastName != null && !lastName.isEmpty();
+	 *
+	 * @ requires pageable != null;
+	 *
+	 * @ ensures \result != null;
+	 *
+	 * @ ensures (\forall Owner o; \result.getContent().contains(o);
+	 *
+	 * @ o.getLastName() != null && o.getLastName().startsWith(lastName));
+	 *
+	 * @
+	 */
 	Page<Owner> findByLastNameStartingWith(String lastName, Pageable pageable);
 
 	/**
@@ -64,12 +72,19 @@ public interface OwnerRepository extends JpaRepository<Owner, Integer> {
 	 * @throws IllegalArgumentException if the id is null (assuming null is not a valid
 	 * input for id)
 	 */
-	/*@
-	 @ requires id != null;
-	 @ ensures \result != null;
-	 @ ensures \result.isPresent() ==> \result.get().getId().equals(id);
-	 @ ensures !\result.isPresent() ==> (\forall Owner o; true; o.getId() != id);
-	 @*/
+	/*
+	 * @
+	 *
+	 * @ requires id != null;
+	 *
+	 * @ ensures \result != null;
+	 *
+	 * @ ensures \result.isPresent() ==> \result.get().getId().equals(id);
+	 *
+	 * @ ensures !\result.isPresent() ==> (\forall Owner o; true; o.getId() != id);
+	 *
+	 * @
+	 */
 	Optional<Owner> findById(Integer id);
 
 }

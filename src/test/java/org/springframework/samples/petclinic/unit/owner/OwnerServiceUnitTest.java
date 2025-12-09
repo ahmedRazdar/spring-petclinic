@@ -1,6 +1,6 @@
 /*
  * Unit Test Example using JUnit 5 + Mockito
- * 
+ *
  * This demonstrates proper unit testing with:
  * - Mocking dependencies
  * - Testing business logic in isolation
@@ -38,8 +38,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit test example for Owner-related operations.
- * Uses Mockito to mock the repository dependency.
+ * Unit test example for Owner-related operations. Uses Mockito to mock the repository
+ * dependency.
  */
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Owner Service Unit Tests")
@@ -52,6 +52,7 @@ class OwnerServiceUnitTest {
 	// For this example, we're testing repository interactions directly
 
 	private Owner testOwner;
+
 	private Pageable pageable;
 
 	@BeforeEach
@@ -106,8 +107,7 @@ class OwnerServiceUnitTest {
 		String lastName = "Doe";
 		List<Owner> owners = Arrays.asList(testOwner);
 		Page<Owner> page = new PageImpl<>(owners, pageable, 1);
-		given(ownerRepository.findByLastNameStartingWith(anyString(), any(Pageable.class)))
-			.willReturn(page);
+		given(ownerRepository.findByLastNameStartingWith(anyString(), any(Pageable.class))).willReturn(page);
 
 		// When
 		Page<Owner> result = ownerRepository.findByLastNameStartingWith(lastName, pageable);
@@ -144,8 +144,7 @@ class OwnerServiceUnitTest {
 		given(ownerRepository.save(null)).willThrow(new IllegalArgumentException("Owner must not be null"));
 
 		// When/Then
-		assertThatThrownBy(() -> ownerRepository.save(null))
-			.isInstanceOf(IllegalArgumentException.class);
+		assertThatThrownBy(() -> ownerRepository.save(null)).isInstanceOf(IllegalArgumentException.class);
 		verify(ownerRepository, never()).save(any(Owner.class));
 	}
 
@@ -165,4 +164,3 @@ class OwnerServiceUnitTest {
 	}
 
 }
-

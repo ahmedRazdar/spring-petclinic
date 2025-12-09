@@ -37,17 +37,17 @@ public class BaseEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private @Nullable Integer id;
 
-	//@ ensures \result == this.id;
+	// @ ensures \result == this.id;
 	public @Nullable Integer getId() {
 		return id;
 	}
 
-	//@ ensures this.id == id;
+	// @ ensures this.id == id;
 	public void setId(@Nullable Integer id) {
 		this.id = id;
 	}
 
-	//@ ensures \result <==> (this.id == null);
+	// @ ensures \result <==> (this.id == null);
 	public boolean isNew() {
 		return this.id == null;
 	}

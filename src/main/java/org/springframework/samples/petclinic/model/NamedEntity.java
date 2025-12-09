@@ -35,18 +35,18 @@ public class NamedEntity extends BaseEntity {
 	@NotBlank
 	private @Nullable String name;
 
-	//@ ensures \result == this.name;
+	// @ ensures \result == this.name;
 	public @Nullable String getName() {
 		return this.name;
 	}
 
-	//@ ensures this.name == name;
+	// @ ensures this.name == name;
 	public void setName(@Nullable String name) {
 		this.name = name;
 	}
 
-	//@ ensures (this.getName() != null) ==> \result.equals(this.getName());
-	//@ ensures (this.getName() == null) ==> \result.equals("<null>");
+	// @ ensures (this.getName() != null) ==> \result.equals(this.getName());
+	// @ ensures (this.getName() == null) ==> \result.equals("<null>");
 	@Override
 	public String toString() {
 		String name = this.getName();

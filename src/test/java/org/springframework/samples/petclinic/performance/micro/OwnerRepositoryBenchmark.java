@@ -1,12 +1,12 @@
 /*
  * JMH Micro-Benchmark Example
- * 
+ *
  * This demonstrates micro-performance testing using JMH.
- * 
+ *
  * To run:
  * 1. mvn clean package
  * 2. java -jar target/benchmarks.jar
- * 
+ *
  * Or use: mvn exec:java -Dexec.mainClass="org.openjdk.jmh.Main" -Dexec.args=".*OwnerRepositoryBenchmark.*"
  */
 
@@ -25,9 +25,9 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
- * JMH benchmarks for OwnerRepository operations.
- * Measures micro-performance of critical operations using in-memory data structures.
- * 
+ * JMH benchmarks for OwnerRepository operations. Measures micro-performance of critical
+ * operations using in-memory data structures.
+ *
  * Note: This benchmark uses in-memory collections to measure basic operation performance
  * without requiring a full Spring context or database connection.
  */
@@ -39,193 +39,196 @@ import java.util.concurrent.TimeUnit;
 @Fork(1)
 public class OwnerRepositoryBenchmark {
 
-    private List<Owner> owners;
+	private List<Owner> owners;
 
-    private Owner testOwner;
+	private Owner testOwner;
 
-    private Integer testId;
+	private Integer testId;
 
-    private String testLastName;
+	private String testLastName;
 
-    @Setup
-    public void setup() {
-        // Initialize test data
-        owners = new ArrayList<>();
-        testId = 1;
-        testLastName = "Davis";
+	@Setup
+	public void setup() {
+		// Initialize test data
+		owners = new ArrayList<>();
+		testId = 1;
+		testLastName = "Davis";
 
-        // Create test owners
-        for (int i = 1; i <= 100; i++) {
-            Owner owner = new Owner();
-            owner.setId(i);
-            owner.setFirstName("First" + i);
-            owner.setLastName("Last" + i);
-            owner.setAddress("Address " + i);
-            owner.setCity("City " + i);
-            owner.setTelephone("1234567890");
-            owners.add(owner);
-        }
+		// Create test owners
+		for (int i = 1; i <= 100; i++) {
+			Owner owner = new Owner();
+			owner.setId(i);
+			owner.setFirstName("First" + i);
+			owner.setLastName("Last" + i);
+			owner.setAddress("Address " + i);
+			owner.setCity("City " + i);
+			owner.setTelephone("1234567890");
+			owners.add(owner);
+		}
 
-        // Add some owners with same last name prefix
-        for (int i = 1; i <= 10; i++) {
-            Owner owner = new Owner();
-            owner.setId(100 + i);
-            owner.setFirstName("Test" + i);
-            owner.setLastName("Davis" + i);
-            owner.setAddress("Test Address " + i);
-            owner.setCity("Test City " + i);
-            owner.setTelephone("1234567890");
-            owners.add(owner);
-        }
+		// Add some owners with same last name prefix
+		for (int i = 1; i <= 10; i++) {
+			Owner owner = new Owner();
+			owner.setId(100 + i);
+			owner.setFirstName("Test" + i);
+			owner.setLastName("Davis" + i);
+			owner.setAddress("Test Address " + i);
+			owner.setCity("Test City " + i);
+			owner.setTelephone("1234567890");
+			owners.add(owner);
+		}
 
-        // Create a test owner for save operations
-        testOwner = new Owner();
-        testOwner.setFirstName("Benchmark");
-        testOwner.setLastName("Test");
-        testOwner.setAddress("Benchmark Address");
-        testOwner.setCity("Benchmark City");
-        testOwner.setTelephone("1234567890");
-    }
+		// Create a test owner for save operations
+		testOwner = new Owner();
+		testOwner.setFirstName("Benchmark");
+		testOwner.setLastName("Test");
+		testOwner.setAddress("Benchmark Address");
+		testOwner.setCity("Benchmark City");
+		testOwner.setTelephone("1234567890");
+	}
 
-    @TearDown
-    public void tearDown() {
-        // Cleanup after benchmarks
-        owners.clear();
-    }
+	@TearDown
+	public void tearDown() {
+		// Cleanup after benchmarks
+		owners.clear();
+	}
 
-    @Benchmark
-    public Optional<Owner> benchmarkFindById() {
-        // Benchmark finding owner by ID (simulating repository.findById)
-        return owners.stream().filter(o -> o.getId() != null && o.getId().equals(testId)).findFirst();
-    }
+	@Benchmark
+	public Optional<Owner> benchmarkFindById() {
+		// Benchmark finding owner by ID (simulating repository.findById)
+		return owners.stream().filter(o -> o.getId() != null && o.getId().equals(testId)).findFirst();
+	}
 
-    @Benchmark
-    public List<Owner> benchmarkFindByLastName() {
-        // Benchmark finding owners by last name (simulating repository.findByLastNameStartingWith)
-        List<Owner> results = new ArrayList<>();
-        for (Owner owner : owners) {
-            if (owner.getLastName() != null && owner.getLastName().startsWith(testLastName)) {
-                results.add(owner);
-            }
-        }
-        return results;
-    }
+	@Benchmark
+	public List<Owner> benchmarkFindByLastName() {
+		// Benchmark finding owners by last name (simulating
+		// repository.findByLastNameStartingWith)
+		List<Owner> results = new ArrayList<>();
+		for (Owner owner : owners) {
+			if (owner.getLastName() != null && owner.getLastName().startsWith(testLastName)) {
+				results.add(owner);
+			}
+		}
+		return results;
+	}
 
-    @Benchmark
-    public Owner benchmarkSave() {
-        // Benchmark saving an owner (simulating repository.save)
-        // Create a new owner and add to list
-        Owner newOwner = new Owner();
-        newOwner.setId(owners.size() + 1);
-        newOwner.setFirstName(testOwner.getFirstName());
-        newOwner.setLastName(testOwner.getLastName());
-        newOwner.setAddress(testOwner.getAddress());
-        newOwner.setCity(testOwner.getCity());
-        newOwner.setTelephone(testOwner.getTelephone());
-        owners.add(newOwner);
-        return newOwner;
-    }
+	@Benchmark
+	public Owner benchmarkSave() {
+		// Benchmark saving an owner (simulating repository.save)
+		// Create a new owner and add to list
+		Owner newOwner = new Owner();
+		newOwner.setId(owners.size() + 1);
+		newOwner.setFirstName(testOwner.getFirstName());
+		newOwner.setLastName(testOwner.getLastName());
+		newOwner.setAddress(testOwner.getAddress());
+		newOwner.setCity(testOwner.getCity());
+		newOwner.setTelephone(testOwner.getTelephone());
+		owners.add(newOwner);
+		return newOwner;
+	}
 
-    @Benchmark
-    public List<Owner> benchmarkFindAll() {
-        // Benchmark finding all owners (simulating repository.findAll)
-        return new ArrayList<>(owners);
-    }
+	@Benchmark
+	public List<Owner> benchmarkFindAll() {
+		// Benchmark finding all owners (simulating repository.findAll)
+		return new ArrayList<>(owners);
+	}
 
-    @Benchmark
-    public int benchmarkCount() {
-        // Benchmark counting owners (simulating repository.count)
-        return owners.size();
-    }
+	@Benchmark
+	public int benchmarkCount() {
+		// Benchmark counting owners (simulating repository.count)
+		return owners.size();
+	}
 
-    @Benchmark
-    public boolean benchmarkExists() {
-        // Benchmark checking if owner exists (simulating repository.existsById)
-        return owners.stream().anyMatch(o -> o.getId() != null && o.getId().equals(testId));
-    }
+	@Benchmark
+	public boolean benchmarkExists() {
+		// Benchmark checking if owner exists (simulating repository.existsById)
+		return owners.stream().anyMatch(o -> o.getId() != null && o.getId().equals(testId));
+	}
 
-    /**
-     * Main method to run benchmarks. Can be executed directly or via Maven.
-     */
-    public static void main(String[] args) throws RunnerException {
-        System.out.println("🔬 JMH Benchmarks for OwnerRepository Operations");
-        System.out.println("==============================================");
+	/**
+	 * Main method to run benchmarks. Can be executed directly or via Maven.
+	 */
+	public static void main(String[] args) throws RunnerException {
+		System.out.println("🔬 JMH Benchmarks for OwnerRepository Operations");
+		System.out.println("==============================================");
 
-        // Run JMH benchmarks
-        try {
-            Options opt = new OptionsBuilder().include(OwnerRepositoryBenchmark.class.getSimpleName()).forks(1).build();
-            new Runner(opt).run();
-        } catch (Exception e) {
-            System.out.println("JMH execution failed, running manual performance test...");
-            runManualPerformanceTest();
-        }
-    }
+		// Run JMH benchmarks
+		try {
+			Options opt = new OptionsBuilder().include(OwnerRepositoryBenchmark.class.getSimpleName()).forks(1).build();
+			new Runner(opt).run();
+		}
+		catch (Exception e) {
+			System.out.println("JMH execution failed, running manual performance test...");
+			runManualPerformanceTest();
+		}
+	}
 
-    /**
-     * Manual performance test when JMH is not available
-     */
-    private static void runManualPerformanceTest() {
-        System.out.println("\n📊 Manual Performance Test Results");
-        System.out.println("==================================");
+	/**
+	 * Manual performance test when JMH is not available
+	 */
+	private static void runManualPerformanceTest() {
+		System.out.println("\n📊 Manual Performance Test Results");
+		System.out.println("==================================");
 
-        OwnerRepositoryBenchmark benchmark = new OwnerRepositoryBenchmark();
+		OwnerRepositoryBenchmark benchmark = new OwnerRepositoryBenchmark();
 
-        // Setup test data
-        benchmark.setup();
+		// Setup test data
+		benchmark.setup();
 
-        // Run each benchmark method multiple times and measure
-        String[] methods = {"benchmarkFindById", "benchmarkFindByLastName", "benchmarkSave", "benchmarkFindAll", "benchmarkCount", "benchmarkExists"};
+		// Run each benchmark method multiple times and measure
+		String[] methods = { "benchmarkFindById", "benchmarkFindByLastName", "benchmarkSave", "benchmarkFindAll",
+				"benchmarkCount", "benchmarkExists" };
 
-        for (String method : methods) {
-            runManualBenchmark(benchmark, method);
-        }
+		for (String method : methods) {
+			runManualBenchmark(benchmark, method);
+		}
 
-        benchmark.tearDown();
+		benchmark.tearDown();
 
-        System.out.println("\n✅ Manual performance test completed!");
-        System.out.println("Note: These are basic timing measurements, not full JMH benchmarks.");
-    }
+		System.out.println("\n✅ Manual performance test completed!");
+		System.out.println("Note: These are basic timing measurements, not full JMH benchmarks.");
+	}
 
-    private static void runManualBenchmark(OwnerRepositoryBenchmark benchmark, String methodName) {
-        try {
-            long totalTime = 0;
-            int iterations = 1000;
+	private static void runManualBenchmark(OwnerRepositoryBenchmark benchmark, String methodName) {
+		try {
+			long totalTime = 0;
+			int iterations = 1000;
 
-            for (int i = 0; i < iterations; i++) {
-                long start = System.nanoTime();
+			for (int i = 0; i < iterations; i++) {
+				long start = System.nanoTime();
 
-                switch (methodName) {
-                    case "benchmarkFindById":
-                        benchmark.benchmarkFindById();
-                        break;
-                    case "benchmarkFindByLastName":
-                        benchmark.benchmarkFindByLastName();
-                        break;
-                    case "benchmarkSave":
-                        benchmark.benchmarkSave();
-                        break;
-                    case "benchmarkFindAll":
-                        benchmark.benchmarkFindAll();
-                        break;
-                    case "benchmarkCount":
-                        benchmark.benchmarkCount();
-                        break;
-                    case "benchmarkExists":
-                        benchmark.benchmarkExists();
-                        break;
-                }
+				switch (methodName) {
+					case "benchmarkFindById":
+						benchmark.benchmarkFindById();
+						break;
+					case "benchmarkFindByLastName":
+						benchmark.benchmarkFindByLastName();
+						break;
+					case "benchmarkSave":
+						benchmark.benchmarkSave();
+						break;
+					case "benchmarkFindAll":
+						benchmark.benchmarkFindAll();
+						break;
+					case "benchmarkCount":
+						benchmark.benchmarkCount();
+						break;
+					case "benchmarkExists":
+						benchmark.benchmarkExists();
+						break;
+				}
 
-                long end = System.nanoTime();
-                totalTime += (end - start);
-            }
+				long end = System.nanoTime();
+				totalTime += (end - start);
+			}
 
-            double avgTimeMicroseconds = (totalTime / iterations) / 1000.0;
-            System.out.printf("%-25s: %.2f μs/op%n", methodName, avgTimeMicroseconds);
+			double avgTimeMicroseconds = (totalTime / iterations) / 1000.0;
+			System.out.printf("%-25s: %.2f μs/op%n", methodName, avgTimeMicroseconds);
 
-        } catch (Exception e) {
-            System.out.printf("%-25s: ERROR - %s%n", methodName, e.getMessage());
-        }
-    }
+		}
+		catch (Exception e) {
+			System.out.printf("%-25s: ERROR - %s%n", methodName, e.getMessage());
+		}
+	}
 
 }
-

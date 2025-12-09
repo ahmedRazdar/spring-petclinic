@@ -38,8 +38,7 @@ public class Visit extends BaseEntity {
 
 	@Column(name = "visitDate")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@Nullable
-	private LocalDate date;
+	@Nullable private LocalDate date;
 
 	@NotBlank
 	private @Nullable String description;
@@ -47,40 +46,47 @@ public class Visit extends BaseEntity {
 	/**
 	 * Creates a new instance of Visit for the current date
 	 */
-	/*@
-     ensures date != null;
-     ensures description == null;
-     @*/
+	/*
+	 * @ ensures date != null; ensures description == null;
+	 *
+	 * @
+	 */
 	public Visit() {
 		this.date = LocalDate.now();
 	}
 
-	/*@
-	ensures \result == date;
-  	@*/
+	/*
+	 * @ ensures \result == date;
+	 *
+	 * @
+	 */
 	public @Nullable LocalDate getDate() {
 		return this.date;
 	}
 
-	/*@
-	 requires newDate != null;
-	 ensures date == newDate;
-   	@*/
+	/*
+	 * @ requires newDate != null; ensures date == newDate;
+	 *
+	 * @
+	 */
 	public void setDate(@Nullable LocalDate date) {
 		this.date = date;
 	}
 
-	/*@
-  	ensures \result == description;
-	@*/
+	/*
+	 * @ ensures \result == description;
+	 *
+	 * @
+	 */
 	public @Nullable String getDescription() {
 		return this.description;
 	}
 
-	/*@
-      requires desc != null && desc.length() > 0;
-      ensures description == desc;
-    @*/
+	/*
+	 * @ requires desc != null && desc.length() > 0; ensures description == desc;
+	 *
+	 * @
+	 */
 	public void setDescription(@Nullable String description) {
 		this.description = description;
 	}

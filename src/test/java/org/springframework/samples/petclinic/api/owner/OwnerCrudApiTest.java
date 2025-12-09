@@ -1,6 +1,6 @@
 /*
  * CRUD API Test Example using JUnit 5 + Real Database
- * 
+ *
  * This demonstrates:
  * - Testing full CRUD operations
  * - Using real database (H2 in-memory or Testcontainers)
@@ -33,8 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * CRUD API tests for Owner operations.
- * Uses real database (H2 in-memory) for testing.
+ * CRUD API tests for Owner operations. Uses real database (H2 in-memory) for testing.
  */
 @SpringBootTest
 @ActiveProfiles("test")
@@ -74,18 +73,18 @@ class OwnerCrudApiTest {
 	void shouldCreateNewOwner() throws Exception {
 		// Given
 		String ownerJson = """
-			{
-				"firstName": "Jane",
-				"lastName": "Smith",
-				"address": "456 Oak Ave",
-				"city": "Springfield",
-				"telephone": "0987654321"
-			}
-			""";
+				{
+					"firstName": "Jane",
+					"lastName": "Smith",
+					"address": "456 Oak Ave",
+					"city": "Springfield",
+					"telephone": "0987654321"
+				}
+				""";
 
 		// When & Then
-		mockMvc.perform(post("/owners/new")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		mockMvc
+			.perform(post("/owners/new").contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("firstName", "Jane")
 				.param("lastName", "Smith")
 				.param("address", "456 Oak Ave")
@@ -135,8 +134,7 @@ class OwnerCrudApiTest {
 		ownerRepository.save(owner2);
 
 		// When & Then
-		mockMvc.perform(get("/owners")
-				.param("lastName", "Doe"))
+		mockMvc.perform(get("/owners").param("lastName", "Doe"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(view().name("owners/ownersList"))
@@ -152,8 +150,8 @@ class OwnerCrudApiTest {
 		Integer ownerId = saved.getId();
 
 		// When & Then
-		mockMvc.perform(post("/owners/{id}/edit", ownerId)
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		mockMvc
+			.perform(post("/owners/{id}/edit", ownerId).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("firstName", "John Updated")
 				.param("lastName", "Doe")
 				.param("address", "123 Main St Updated")
@@ -181,8 +179,8 @@ class OwnerCrudApiTest {
 		// This is a template for when it's added
 		// When & Then
 		// mockMvc.perform(delete("/owners/{id}", ownerId))
-		// 	.andDo(print())
-		// 	.andExpect(status().isOk());
+		// .andDo(print())
+		// .andExpect(status().isOk());
 
 		// Verify deletion
 		// Optional<Owner> deleted = ownerRepository.findById(ownerId);
@@ -194,11 +192,10 @@ class OwnerCrudApiTest {
 	void shouldRejectInvalidOwnerData() throws Exception {
 		// Given - Missing required fields
 		// When & Then
-		mockMvc.perform(post("/owners/new")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				.param("firstName", "") // Empty first name
-				.param("lastName", "Doe")
-				.param("telephone", "123")) // Invalid telephone (not 10 digits)
+		mockMvc.perform(post("/owners/new").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.param("firstName", "") // Empty first name
+			.param("lastName", "Doe")
+			.param("telephone", "123")) // Invalid telephone (not 10 digits)
 			.andDo(print())
 			.andExpect(status().isOk()) // Returns to form with errors
 			.andExpect(view().name("owners/createOrUpdateOwnerForm"))
@@ -209,8 +206,7 @@ class OwnerCrudApiTest {
 	@DisplayName("SEARCH - Should return empty list when no owners found")
 	void shouldReturnEmptyListWhenNoOwnersFound() throws Exception {
 		// When & Then
-		mockMvc.perform(get("/owners")
-				.param("lastName", "NonExistent"))
+		mockMvc.perform(get("/owners").param("lastName", "NonExistent"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(view().name("owners/findOwners"))
@@ -218,4 +214,3 @@ class OwnerCrudApiTest {
 	}
 
 }
-

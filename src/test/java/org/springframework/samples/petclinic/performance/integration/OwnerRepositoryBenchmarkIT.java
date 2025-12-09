@@ -20,20 +20,20 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class OwnerRepositoryBenchmarkIT {
 
-    @Test
-    public void runOwnerRepositoryBenchmarks() throws RunnerException {
-        System.out.println("🚀 Running Owner Repository Integration Benchmarks");
-        System.out.println("==================================================");
+	@Test
+	public void runOwnerRepositoryBenchmarks() throws RunnerException {
+		System.out.println("🚀 Running Owner Repository Integration Benchmarks");
+		System.out.println("==================================================");
 
-        Options opt = new OptionsBuilder()
-                .include(OwnerRepositoryBenchmark.class.getSimpleName())
-                .result("target/jmh-owner-repository-results.json")
-                .resultFormat(ResultFormatType.JSON)
-                .build();
+		Options opt = new OptionsBuilder().include(OwnerRepositoryBenchmark.class.getSimpleName())
+			.result("target/jmh-owner-repository-results.json")
+			.resultFormat(ResultFormatType.JSON)
+			.build();
 
-        new Runner(opt).run();
+		new Runner(opt).run();
 
-        System.out.println("✅ Owner repository benchmarks completed!");
-        System.out.println("📊 Results saved to: target/jmh-owner-repository-results.json");
-    }
+		System.out.println("✅ Owner repository benchmarks completed!");
+		System.out.println("📊 Results saved to: target/jmh-owner-repository-results.json");
+	}
+
 }
