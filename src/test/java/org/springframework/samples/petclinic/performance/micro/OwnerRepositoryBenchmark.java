@@ -148,9 +148,83 @@ public class OwnerRepositoryBenchmark {
      * Main method to run benchmarks. Can be executed directly or via Maven.
      */
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder().include(OwnerRepositoryBenchmark.class.getSimpleName()).forks(1).build();
+        System.out.println("🔬 JMH Benchmarks for OwnerRepository Operations");
+        System.out.println("==============================================");
 
-        new Runner(opt).run();
+        // Run JMH benchmarks
+        try {
+            Options opt = new OptionsBuilder().include(OwnerRepositoryBenchmark.class.getSimpleName()).forks(1).build();
+            new Runner(opt).run();
+        } catch (Exception e) {
+            System.out.println("JMH execution failed, running manual performance test...");
+            runManualPerformanceTest();
+        }
+    }
+
+    /**
+     * Manual performance test when JMH is not available
+     */
+    private static void runManualPerformanceTest() {
+        System.out.println("\n📊 Manual Performance Test Results");
+        System.out.println("==================================");
+
+        OwnerRepositoryBenchmark benchmark = new OwnerRepositoryBenchmark();
+
+        // Setup test data
+        benchmark.setup();
+
+        // Run each benchmark method multiple times and measure
+        String[] methods = {"benchmarkFindById", "benchmarkFindByLastName", "benchmarkSave", "benchmarkFindAll", "benchmarkCount", "benchmarkExists"};
+
+        for (String method : methods) {
+            runManualBenchmark(benchmark, method);
+        }
+
+        benchmark.tearDown();
+
+        System.out.println("\n✅ Manual performance test completed!");
+        System.out.println("Note: These are basic timing measurements, not full JMH benchmarks.");
+    }
+
+    private static void runManualBenchmark(OwnerRepositoryBenchmark benchmark, String methodName) {
+        try {
+            long totalTime = 0;
+            int iterations = 1000;
+
+            for (int i = 0; i < iterations; i++) {
+                long start = System.nanoTime();
+
+                switch (methodName) {
+                    case "benchmarkFindById":
+                        benchmark.benchmarkFindById();
+                        break;
+                    case "benchmarkFindByLastName":
+                        benchmark.benchmarkFindByLastName();
+                        break;
+                    case "benchmarkSave":
+                        benchmark.benchmarkSave();
+                        break;
+                    case "benchmarkFindAll":
+                        benchmark.benchmarkFindAll();
+                        break;
+                    case "benchmarkCount":
+                        benchmark.benchmarkCount();
+                        break;
+                    case "benchmarkExists":
+                        benchmark.benchmarkExists();
+                        break;
+                }
+
+                long end = System.nanoTime();
+                totalTime += (end - start);
+            }
+
+            double avgTimeMicroseconds = (totalTime / iterations) / 1000.0;
+            System.out.printf("%-25s: %.2f μs/op%n", methodName, avgTimeMicroseconds);
+
+        } catch (Exception e) {
+            System.out.printf("%-25s: ERROR - %s%n", methodName, e.getMessage());
+        }
     }
 
 }

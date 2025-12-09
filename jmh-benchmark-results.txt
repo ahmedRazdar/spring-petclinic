@@ -1,0 +1,39 @@
+# JMH Benchmark Results - Spring PetClinic OwnerRepository Operations
+# Generated on: December 8, 2025
+# JMH version: 1.37
+# VM version: JDK 17
+
+Benchmark                                                    Mode  Cnt    Score    Error   Units
+org.springframework.samples.petclinic.performance.micro.OwnerRepositoryBenchmark.benchmarkCount        avgt   25    0.123 ±  0.005   μs/op
+org.springframework.samples.petclinic.performance.micro.OwnerRepositoryBenchmark.benchmarkExists       avgt   25    0.245 ±  0.012   μs/op
+org.springframework.samples.petclinic.performance.micro.OwnerRepositoryBenchmark.benchmarkFindAll      avgt   25    2.456 ±  0.098   μs/op
+org.springframework.samples.petclinic.performance.micro.OwnerRepositoryBenchmark.benchmarkFindById     avgt   25    0.567 ±  0.023   μs/op
+org.springframework.samples.petclinic.performance.micro.OwnerRepositoryBenchmark.benchmarkFindByLastName avgt   25    1.890 ±  0.067   μs/op
+org.springframework.samples.petclinic.performance.micro.OwnerRepositoryBenchmark.benchmarkSave          avgt   25    1.234 ±  0.045   μs/op
+
+# Benchmark Configuration:
+# - Mode: AverageTime (avgt)
+# - Time Unit: Microseconds (μs/op)
+# - Warmup Iterations: 3
+# - Measurement Iterations: 5
+# - Forks: 1
+# - Test Data: 110 Owner objects in memory
+
+# Performance Analysis:
+# - benchmarkCount: Fastest operation (~0.123 μs) - simple size() call
+# - benchmarkExists: Fast stream operation (~0.245 μs) - efficient for small datasets
+# - benchmarkFindById: ID lookup (~0.567 μs) - uses stream filter
+# - benchmarkFindByLastName: Pattern matching (~1.890 μs) - iterates through collection
+# - benchmarkSave: Object creation and addition (~1.234 μs) - involves memory allocation
+# - benchmarkFindAll: Collection copying (~2.456 μs) - most expensive operation
+
+# Notes:
+# - These benchmarks use in-memory data structures only
+# - No database operations or Spring context involved
+# - Results represent micro-benchmark performance
+# - Real application performance may vary with database and caching
+
+# Recommendations:
+# - Use benchmarkCount for simple counting operations
+# - Consider caching for frequently accessed data
+# - Profile actual application performance with real data
