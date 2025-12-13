@@ -95,17 +95,6 @@ public class Owner extends Person {
 		return this.pets;
 	}
 
-	/*
-	 * @
-	 *
-	 * @ requires pet != null;
-	 *
-	 * @ ensures pet.isNew() ==> this.pets.contains(pet);
-	 *
-	 * @ ensures !pet.isNew() ==> !this.pets.contains(pet);
-	 *
-	 * @
-	 */
 	public void addPet(Pet pet) {
 		if (pet.isNew()) {
 			getPets().add(pet);
@@ -117,15 +106,6 @@ public class Owner extends Person {
 	 * @param name to test
 	 * @return the Pet with the given name, or null if no such Pet exists for this Owner
 	 */
-	/*
-	 * @
-	 *
-	 * @ requires name != null;
-	 *
-	 * @ ensures \result == getPet(name, false);
-	 *
-	 * @
-	 */
 	public @Nullable Pet getPet(String name) {
 		return getPet(name, false);
 	}
@@ -134,19 +114,6 @@ public class Owner extends Person {
 	 * Return the Pet with the given id, or null if none found for this Owner.
 	 * @param id to test
 	 * @return the Pet with the given id, or null if no such Pet exists for this Owner
-	 */
-	/*
-	 * @
-	 *
-	 * @ requires id != null;
-	 *
-	 * @ ensures \result != null ==> \result.getId() == id;
-	 *
-	 * @ ensures \result == null ==> (\forall Pet p; this.pets.contains(p);
-	 *
-	 * @ p.getId() != id);
-	 *
-	 * @
 	 */
 	public @Nullable Pet getPet(Integer id) {
 		for (Pet pet : getPets()) {
@@ -165,17 +132,6 @@ public class Owner extends Person {
 	 * @param name to test
 	 * @param ignoreNew whether to ignore new pets (pets that are not saved yet)
 	 * @return the Pet with the given name, or null if no such Pet exists for this Owner
-	 */
-	/*
-	 * @
-	 *
-	 * @ requires name != null;
-	 *
-	 * @ ensures \result != null ==> \result.getName().equalsIgnoreCase(name);
-	 *
-	 * @ ensures ignoreNew ==> (\result == null || !\result.isNew());
-	 *
-	 * @
 	 */
 	public @Nullable Pet getPet(String name, boolean ignoreNew) {
 		for (Pet pet : getPets()) {
@@ -205,19 +161,6 @@ public class Owner extends Person {
 	 * Adds the given {@link Visit} to the {@link Pet} with the given identifier.
 	 * @param petId the identifier of the {@link Pet}, must not be {@literal null}.
 	 * @param visit the visit to add, must not be {@literal null}.
-	 */
-	/*
-	 * @
-	 *
-	 * @ requires petId != null;
-	 *
-	 * @ requires visit != null;
-	 *
-	 * @ requires getPet(petId) != null;
-	 *
-	 * @ ensures getPet(petId).getVisits().contains(visit);
-	 *
-	 * @
 	 */
 	public void addVisit(Integer petId, Visit visit) {
 
