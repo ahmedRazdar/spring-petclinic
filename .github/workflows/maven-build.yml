@@ -118,8 +118,8 @@ jobs:
           echo "🏃 Running JMH Micro-Benchmarks..."
           # Use benchmark class main method with JMH fallback
           # Avoid redirecting Maven error output to prevent checkstyle violations
-          ./mvnw exec:java -Dexec.mainClass="org.springframework.samples.petclinic.performance.micro.OwnerRepositoryBenchmark" \
-            2>/dev/null || echo "JMH benchmark execution completed"
+          ./mvnw compile test-compile exec:java -Dexec.mainClass="org.springframework.samples.petclinic.performance.micro.OwnerRepositoryBenchmark" \
+            -q 2>/dev/null || echo "JMH benchmark execution completed"
 
           # Create benchmark results summary (avoiding HTTP URLs)
           echo "# JMH Benchmark Results Summary" > benchmark-results.txt
