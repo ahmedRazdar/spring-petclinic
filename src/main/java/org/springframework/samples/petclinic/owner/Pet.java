@@ -59,70 +59,26 @@ public class Pet extends NamedEntity {
 	@OrderBy("date ASC")
 	private final Set<Visit> visits = new LinkedHashSet<>();
 
-	/*
-	 * @
-	 *
-	 * @ ensures this.birthDate == birthDate;
-	 *
-	 * @
-	 */
 	public void setBirthDate(@Nullable LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 
-	/*
-	 * @
-	 *
-	 * @ ensures \result == this.birthDate;
-	 *
-	 * @
-	 */
 	public @Nullable LocalDate getBirthDate() {
 		return this.birthDate;
 	}
 
-	/*
-	 * @
-	 *
-	 * @ ensures \result == this.type;
-	 *
-	 * @
-	 */
 	public @Nullable PetType getType() {
 		return this.type;
 	}
 
-	/*
-	 * @
-	 *
-	 * @ ensures this.type == type;
-	 *
-	 * @
-	 */
 	public void setType(@Nullable PetType type) {
 		this.type = type;
 	}
 
-	/*
-	 * @
-	 *
-	 * @ ensures \result == this.visits;
-	 *
-	 * @
-	 */
 	public Collection<Visit> getVisits() {
 		return this.visits;
 	}
 
-	/*
-	 * @
-	 *
-	 * @ requires visit != null;
-	 *
-	 * @ ensures visits.contains(visit);
-	 *
-	 * @
-	 */
 	public void addVisit(Visit visit) {
 		getVisits().add(visit);
 	}
