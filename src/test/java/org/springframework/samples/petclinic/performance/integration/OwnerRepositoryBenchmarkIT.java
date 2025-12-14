@@ -8,7 +8,6 @@
 package org.springframework.samples.petclinic.performance.integration;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -18,16 +17,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.File;
-import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class OwnerRepositoryBenchmarkIT {
+class OwnerRepositoryBenchmarkIT {
 
 	@Test
-	public void runOwnerRepositoryBenchmarks(@TempDir Path tempDir) throws RunnerException {
+	void runOwnerRepositoryBenchmarks() throws RunnerException {
 		System.out.println("🚀 Running Owner Repository Integration Benchmarks");
 		System.out.println("==================================================");
 
@@ -48,7 +46,7 @@ public class OwnerRepositoryBenchmarkIT {
 
 		System.out.println("✅ Owner repository benchmarks completed!");
 		System.out.println("📊 Results saved to: " + resultsFile.getPath());
-		assertThat(resultsFile.getName()).isEqualTo("jmh-owner-repository-results.json");
+		assertThat(resultsFile).hasName("jmh-owner-repository-results.json");
 	}
 
 }
