@@ -103,9 +103,13 @@ public class OwnerRepositoryBenchmark {
 	public List<Owner> benchmarkFindByLastName() {
 		// Benchmark finding owners by last name (simulating
 		// repository.findByLastNameStartingWith)
-		return owners.stream()
-			.filter(owner -> owner.getLastName() != null && owner.getLastName().startsWith(testLastName))
-			.collect(ArrayList::new, (list, item) -> list.add(item), (list1, list2) -> list1.addAll(list2));
+		List<Owner> results = new ArrayList<>();
+		for (Owner owner : owners) {
+			if (owner.getLastName() != null && owner.getLastName().startsWith(testLastName)) {
+				results.add(owner);
+			}
+		}
+		return results;
 	}
 
 	@Benchmark
@@ -211,9 +215,6 @@ public class OwnerRepositoryBenchmark {
 						break;
 					case "benchmarkExists":
 						benchmark.benchmarkExists();
-						break;
-					default:
-						System.out.println("Unknown benchmark method: " + methodName);
 						break;
 				}
 
