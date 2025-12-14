@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OwnerRepositoryBenchmarkIT {
 
 	@Test
-	public void runOwnerRepositoryBenchmarks(@TempDir Path tempDir) throws RunnerException {
+	public void runOwnerRepositoryBenchmarks() throws RunnerException {
 		System.out.println("🚀 Running Owner Repository Integration Benchmarks");
 		System.out.println("==================================================");
 

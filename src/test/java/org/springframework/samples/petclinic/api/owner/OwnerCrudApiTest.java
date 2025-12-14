@@ -71,17 +71,6 @@ class OwnerCrudApiTest {
 	@Test
 	@DisplayName("CREATE - Should create a new owner")
 	void shouldCreateNewOwner() throws Exception {
-		// Given
-		String ownerJson = """
-				{
-					"firstName": "Jane",
-					"lastName": "Smith",
-					"address": "456 Oak Ave",
-					"city": "Springfield",
-					"telephone": "0987654321"
-				}
-				""";
-
 		// When & Then
 		mockMvc
 			.perform(post("/owners/new").contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -173,17 +162,16 @@ class OwnerCrudApiTest {
 	void shouldHandleOwnerDeletion() throws Exception {
 		// Given
 		Owner saved = ownerRepository.save(testOwner);
-		Integer ownerId = saved.getId();
 
 		// Note: Delete endpoint may not be implemented in this application
 		// This is a template for when it's added
 		// When & Then
-		// mockMvc.perform(delete("/owners/{id}", ownerId))
+		// mockMvc.perform(delete("/owners/{id}", saved.getId()))
 		// .andDo(print())
 		// .andExpect(status().isOk());
 
 		// Verify deletion
-		// Optional<Owner> deleted = ownerRepository.findById(ownerId);
+		// Optional<Owner> deleted = ownerRepository.findById(saved.getId());
 		// assertThat(deleted).isEmpty();
 	}
 

@@ -9,11 +9,9 @@
 
 package org.springframework.samples.petclinic.performance.integration;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.openjdk.jmh.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerRepository;
 import org.springframework.test.context.ActiveProfiles;
